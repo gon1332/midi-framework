@@ -2,8 +2,8 @@
 
 // === NUMBER OF CONTROLS USED
 byte NUMBER_BUTTONS = 0;
-byte NUMBER_ROTPOTS = 1;
-byte NUMBER_SLDPOTS = 0;
+byte NUMBER_ROTPOTS = 0;
+byte NUMBER_SLDPOTS = 1;
 byte NUMBER_NCODERS = 0;
 
 
@@ -27,8 +27,17 @@ RotaryPot RP0(A0, 0, 1, 1);
 RotaryPot *ROTPOTS[] { &RP0 };
 
 
+// === DEFINE DIRECTLY CONNECTED SLIDE POTENTIOMETERS
+// - SlidePot (Pin Number, Command, CC Control, Channel)
+SlidePot SP0(A0, 0, 1, 1);
+
+// Array of pointers to buttons used
+SlidePot *SLDPOTS[] { &SP0 };
+
+
 static void updateButtons();
 static void updateRotPots();
+static void updateSldPots();
 
 
 void setup()
@@ -42,7 +51,7 @@ void loop()
 {
     if (NUMBER_BUTTONS != 0) updateButtons();
     if (NUMBER_ROTPOTS != 0) updateRotPots();
-    /* if (NUMBER_SLDPOTS != 0) updateSldPots(); */
+    if (NUMBER_SLDPOTS != 0) updateSldPots();
     /* if (NUMBER_NCODERS != 0) updateNcoders(); */
 }
 
@@ -97,6 +106,21 @@ static void updateRotPots()
                 ROTPOTS[i]->getControl(),
                 pot_value,
                 ROTPOTS[i]->getChannel());
+            Serial.println(pot_value);
+        }
+    }
+}
+
+
+static void updateSldPots()
+{
+    for (int i = 0; i < NUMBER_SLDPOTS; i++) {
+        int pot_value = SLDPOTS[i]->getCompValue();
+        if (pot_value != 255) {
+            usbMIDI.sendControlChange(
+                SLDPOTS[i]->getControl(),
+                pot_value,
+                SLDPOTS[i]->getChannel());
             Serial.println(pot_value);
         }
     }
