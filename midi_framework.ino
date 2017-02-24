@@ -57,7 +57,7 @@ void loop()
 
 
 // === STATIC FUNCTIONS
-// - Manipulating commponent values.
+// - Manipulating component values.
 
 static void updateButtons()
 {

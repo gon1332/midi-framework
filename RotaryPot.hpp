@@ -31,9 +31,8 @@ RotaryPot::RotaryPot(byte pin, byte command, byte control, byte channel):
     _channel(channel)
 {
     _value = analogRead(_pin);
+    _oldValue = _value;
     _value = _value >> 3;
-    _oldValue = _value << 3;
-    _value = _value << 3;
 }
 
 byte RotaryPot::getCompValue()
